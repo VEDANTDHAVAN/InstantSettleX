@@ -211,7 +211,7 @@ export default function SettlementPage() {
                         </span>
                       </div>
                     ) : (
-                      <span className="text-sm text-muted-foreground">
+                      <span className="text-sm text-muted-foreground" suppressHydrationWarning>
                         {new Date(trade.timestamp).toLocaleTimeString()}
                       </span>
                     )}
