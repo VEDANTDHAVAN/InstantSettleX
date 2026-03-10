@@ -22,8 +22,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { useBlockchain } from "@/lib/blockchain"
+import { getTransactionUrl } from "@/lib/blockchain/contracts"
 import { toast } from "sonner"
-import { ArrowUpRight, ArrowDownRight, Zap, CheckCircle2, Copy, ExternalLink } from "lucide-react"
+import { ArrowUpRight, ArrowDownRight, Zap, CheckCircle2, Copy, ExternalLink, AlertCircle } from "lucide-react"
+import Link from "next/link"
 
 const stocks = [
   { symbol: "TCS", name: "Tata Consultancy Services", price: 3450.5, change: 1.2 },
@@ -91,8 +93,11 @@ export default function TradePage() {
       })
       setShowSuccessModal(true)
       setQuantity("")
-    } catch {
-      toast.error("Trade execution failed")
+      toast.success(`${type === "buy" ? "Buy" : "Sell"} order executed successfully`)
+    } catch (error: any) {
+      console.error("[v0] Trade error:", error)
+      const errorMsg = error?.message || "Trade execution failed"
+      toast.error(errorMsg)
     } finally {
       setIsExecuting(false)
     }
@@ -415,13 +420,13 @@ export default function TradePage() {
                     <Copy className="h-4 w-4" />
                   </Button>
                   <Button size="icon" variant="ghost" asChild>
-                    <a
-                      href={`https://etherscan.io/tx/${tradeResult.txHash}`}
+                    <Link
+                      href={getTransactionUrl(tradeResult.txHash)}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
                       <ExternalLink className="h-4 w-4" />
-                    </a>
+                    </Link>
                   </Button>
                 </div>
               </div>

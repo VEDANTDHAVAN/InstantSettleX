@@ -13,7 +13,9 @@ import {
 } from "@/components/ui/table"
 import { Progress } from "@/components/ui/progress"
 import { useBlockchain } from "@/lib/blockchain"
-import { Activity, CheckCircle2, Clock, Loader2, Zap } from "lucide-react"
+import { getTransactionUrl } from "@/lib/blockchain/contracts"
+import { Activity, CheckCircle2, Clock, ExternalLink, Loader2, Zap } from "lucide-react"
+import Link from "next/link"
 
 export default function SettlementPage() {
   const { trades, settleTrade } = useBlockchain()
@@ -178,7 +180,21 @@ export default function SettlementPage() {
                       : ""
                   }
                 >
-                  <TableCell className="font-mono text-sm">{trade.id}</TableCell>
+                  <TableCell className="font-mono text-sm">
+                    {trade.txHash ? (
+                      <Link
+                        href={getTransactionUrl(trade.txHash)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline flex items-center gap-1"
+                      >
+                        {trade.id}
+                        <ExternalLink className="h-3 w-3 inline" />
+                      </Link>
+                    ) : (
+                      trade.id
+                    )}
+                  </TableCell>
                   <TableCell className="font-mono text-sm text-muted-foreground">
                     {trade.buyer}
                   </TableCell>
